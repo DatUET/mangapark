@@ -40,6 +40,7 @@ class ContentChapterViewController: UIViewController {
     
     @objc func reload() {
         commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[0]), placeholderImage: UIImage(named: "down"))
+        debugPrint(Contains.listImageOfChapter[0])
         viewDidLoad()
     }
 

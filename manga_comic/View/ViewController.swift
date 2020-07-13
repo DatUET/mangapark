@@ -37,7 +37,8 @@ class ViewController: UIViewController {
     }
     
     @objc func goToSearch() {
-        
+        let searchViewController = storyboard?.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController
+        self.navigationController?.pushViewController(searchViewController!, animated: true)
     }
     
     @objc func reload() {

@@ -237,4 +237,48 @@ class MangaPark {
                 }
         }
     }
+    
+    public func search(orderBy: String, page: Int, collection: UICollectionView!) {
+        var genres = ""
+        var rating = ""
+        var year = ""
+        if Contains.yearSearch == "null" {
+            year = ""
+        } else {
+            year = Contains.yearSearch
+        }
+        if page == 1 {
+            Contains.arrSearchMangaItem.removeAll()
+            collection.reloadData()
+        }
+        if Contains.rating > 0 {
+            rating = "\(Contains.rating)"
+        } else {
+            rating = ""
+        }
+        for i in Contains.arrIndexGenreSelected {
+            genres += "\(Contains.arrGenre[i]),"
+        }
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 10
+        manager.request("https://mangapark.net/search?orderby=\(orderBy)&q=\(Contains.nameKeyWord)&autart=\(Contains.authKeyWord)&genres=\(genres)&rating=\(rating)&status=\(Contains.status)&years=\(year)&page=\(page)", method: .get, headers: headers)
+            .responseString { response in
+                if response.result.isSuccess {
+                    let htmlResult = response.result.value!
+                    do {
+                        let parsed = try SwiftSoup.parse(htmlResult)
+                        for item in try parsed.getElementsByClass("item") {
+                            Contains.arrSearchMangaItem.append(self.parseListMangaNewOrHot(element: item))
+                        }
+                        collection.reloadData()
+                        Contains.loadMore = false
+                    } catch {
+                        debugPrint(error)
+                    }
+                }
+                else if response.result.isFailure {
+                    debugPrint("time out")
+                }
+        }
+    }
 }
