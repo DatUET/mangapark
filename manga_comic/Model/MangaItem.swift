@@ -20,4 +20,11 @@ class MangaItem {
         self.imageUrl = imageUrl
         self.newChap = newChap
     }
+    
+    init() {
+        self.name = ""
+        self.url = ""
+        self.imageUrl = ""
+        self.newChap = ""
+    }
 }

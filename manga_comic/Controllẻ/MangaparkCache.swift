@@ -55,6 +55,7 @@ class MangaParkCache {
             for object in results {
                 guard let objectData = object as? NSManagedObject else {continue}
                 managedContext.delete(objectData)
+                try managedContext.save()
             }
         } catch let error {
             print("Detele all data in \(Contains.BOOKMARK_CORE_DATA) error :", error)

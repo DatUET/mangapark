@@ -17,6 +17,8 @@ class ContentChapterViewController: UIViewController {
     @IBOutlet weak var nextPage: UIButton!
     @IBOutlet weak var currentPageIndex: UILabel!
     @IBOutlet weak var scrollImage: UIScrollView!
+    @IBOutlet var swipeLeft: UISwipeGestureRecognizer!
+    @IBOutlet var swipeRight: UISwipeGestureRecognizer!
     
     var currentIndexPage = 0
     
@@ -30,6 +32,10 @@ class ContentChapterViewController: UIViewController {
         }
         backPage.addTarget(self, action: #selector(backPageAction), for: .touchUpInside)
         nextPage.addTarget(self, action: #selector(nextPageAction), for: .touchUpInside)
+        swipeRight.addTarget(self, action: #selector(backPageAction))
+        swipeLeft.addTarget(self, action: #selector(nextPageAction))
+        scrollImage.addGestureRecognizer(swipeLeft)
+        scrollImage.addGestureRecognizer(swipeRight)
         if Contains.listImageOfChapter.isEmpty {
             currentPageIndex.text = "0/0"
         } else {

@@ -23,7 +23,7 @@ class MangaDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var lastest: UILabel!
     @IBOutlet weak var nameLb: UILabel!
     @IBOutlet weak var summary: UILabel!
-    
+        
     override func awakeFromNib() {
         super.awakeFromNib()
     }

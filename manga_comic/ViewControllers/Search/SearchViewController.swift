@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol SearchDelegate {
+    func updateArrayIndexGenre(arrIndex: [Int])
+}
+
 class SearchViewController: UIViewController {
     @IBOutlet weak var searchTable: UITableView!
     @IBOutlet weak var searchButton: UIButton!

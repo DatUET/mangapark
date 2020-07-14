@@ -47,6 +47,7 @@ class MangaViewController: UIViewController {
         } else {
             mangaparkChache.savaMangaToCoreData(mangaItem: MangaItem.init(name: nameManga, url: urlManga, imageUrl: imageUrl, newChap: ""), nameEntity: Contains.BOOKMARK_CORE_DATA)
         }
+        NotificationCenter.default.post(name: NSNotification.Name("reloadReading"), object: nil)
         viewDidLoad()
     }
 }

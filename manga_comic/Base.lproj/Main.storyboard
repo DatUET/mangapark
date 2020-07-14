@@ -136,7 +136,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nCw-qO-53m">
-                                <rect key="frame" x="1" y="52" width="414" height="765"/>
+                                <rect key="frame" x="0.0" y="52" width="414" height="765"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kDL-S3-Ego">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="765"/>
@@ -157,7 +157,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="nCw-qO-53m" secondAttribute="trailing" constant="-1" id="0Fu-qe-RLD"/>
+                            <constraint firstAttribute="trailing" secondItem="nCw-qO-53m" secondAttribute="trailing" id="0Fu-qe-RLD"/>
                             <constraint firstItem="yUe-Wg-84F" firstAttribute="trailing" secondItem="sFg-nv-xta" secondAttribute="trailing" constant="60" id="2E7-kc-73O"/>
                             <constraint firstItem="sFg-nv-xta" firstAttribute="bottom" secondItem="yUe-Wg-84F" secondAttribute="bottom" id="OrH-Vc-7PK"/>
                             <constraint firstItem="s8s-ok-ZOp" firstAttribute="leading" secondItem="yUe-Wg-84F" secondAttribute="leading" constant="60" id="bC2-sd-7Dv"/>
@@ -165,7 +165,7 @@
                             <constraint firstItem="sFg-nv-xta" firstAttribute="top" secondItem="nCw-qO-53m" secondAttribute="bottom" constant="8" id="oo5-hZ-OBe"/>
                             <constraint firstItem="jvg-hM-6w2" firstAttribute="centerY" secondItem="s8s-ok-ZOp" secondAttribute="centerY" id="rJC-Tc-NHH"/>
                             <constraint firstItem="yUe-Wg-84F" firstAttribute="bottom" secondItem="jvg-hM-6w2" secondAttribute="bottom" constant="8" id="rQ2-1J-z93"/>
-                            <constraint firstItem="nCw-qO-53m" firstAttribute="leading" secondItem="yUe-Wg-84F" secondAttribute="leading" constant="1" id="rte-lE-3o6"/>
+                            <constraint firstItem="nCw-qO-53m" firstAttribute="leading" secondItem="yUe-Wg-84F" secondAttribute="leading" id="rte-lE-3o6"/>
                             <constraint firstItem="jvg-hM-6w2" firstAttribute="leading" secondItem="s8s-ok-ZOp" secondAttribute="trailing" constant="8" id="v7e-1w-5LJ"/>
                             <constraint firstItem="jvg-hM-6w2" firstAttribute="centerY" secondItem="sFg-nv-xta" secondAttribute="centerY" id="wLk-s5-cL9"/>
                             <constraint firstItem="nCw-qO-53m" firstAttribute="top" secondItem="yUe-Wg-84F" secondAttribute="top" constant="8" id="x5W-ah-wnY"/>
@@ -179,9 +179,13 @@
                         <outlet property="currentPageIndex" destination="jvg-hM-6w2" id="o1I-Ue-pLv"/>
                         <outlet property="nextPage" destination="sFg-nv-xta" id="tvg-cj-cco"/>
                         <outlet property="scrollImage" destination="nCw-qO-53m" id="guc-9j-v8R"/>
+                        <outlet property="swipeLeft" destination="gm3-WA-tWj" id="4NQ-hx-oRd"/>
+                        <outlet property="swipeRight" destination="tE8-IO-dDb" id="kcd-Sz-J03"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lKH-DH-hDE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="left" id="gm3-WA-tWj"/>
+                <swipeGestureRecognizer direction="right" id="tE8-IO-dDb"/>
             </objects>
             <point key="canvasLocation" x="4155.072463768116" y="-557.14285714285711"/>
         </scene>

@@ -11,8 +11,6 @@ import UIKit
 class FilterGenreTableViewCell: UITableViewCell {
     @IBOutlet weak var filerGenreCollection: UICollectionView!
     
-    var arrGenre = [String]()
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         

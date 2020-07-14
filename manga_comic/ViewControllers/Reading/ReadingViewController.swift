@@ -25,6 +25,13 @@ class ReadingViewController: UIViewController {
         }
         readingCollection.reloadData()
         readSegment.addTarget(self, action: #selector(changeTab(sender:)), for: .valueChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadReading"), object: nil)
+    }
+    
+    @objc func reload() {
+        Contains.arrBookmarkManga = self.mangaparkChache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
+        Contains.arrRecentManga = self.mangaparkChache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
+        viewDidLoad()
     }
     
     @objc func changeTab(sender: UISegmentedControl) {

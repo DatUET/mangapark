@@ -38,15 +38,7 @@ class MangaPark {
                         let parsed = try SwiftSoup.parse(htmlResult)
                         
                         //debugPrint(try parsed.getElementsByClass("ls1").select("div")[0])
-                        for e in try parsed.getElementsByClass("ls1")[0].getElementsByClass("d-flex flex-row item ") {
-                            //debugPrint(e)
-                            Contains.arrMangaLastestItem.append(self.parseHtmlListMangaLastest(element: e))
-                        }
-                        for e in try parsed.getElementsByClass("ls1")[0].getElementsByClass("d-flex flex-row item  hot") {
-                            //debugPrint(e)
-                            Contains.arrMangaLastestItem.append(self.parseHtmlListMangaLastest(element: e))
-                        }
-                        for e in try parsed.getElementsByClass("ls1")[0].getElementsByClass("d-flex flex-row item  new") {
+                        for e in try parsed.getElementsByClass("ls1")[0].getElementsByClass("item") {
                             //debugPrint(e)
                             Contains.arrMangaLastestItem.append(self.parseHtmlListMangaLastest(element: e))
                         }
