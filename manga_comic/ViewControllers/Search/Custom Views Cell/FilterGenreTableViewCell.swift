@@ -33,19 +33,21 @@ class FilterGenreTableViewCell: UITableViewCell {
 
 extension FilterGenreTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Contains.arrIndexGenreSelected.count
+        return SearchViewController.arrIndexGenreSelected.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = filerGenreCollection.dequeueReusableCell(withReuseIdentifier: "FilterSearchItemCollectionViewCell", for: indexPath) as! FilterSearchItemCollectionViewCell
-        cell.genre.text = Contains.arrGenre[Contains.arrIndexGenreSelected[indexPath.row]]
+        cell.item.text = Contains.arrGenre[SearchViewController.arrIndexGenreSelected[indexPath.row]]
+        cell.item.layer.cornerRadius = 10.0
+        cell.item.layer.masksToBounds = true
         return cell
     }
 }
 
 extension FilterGenreTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        Contains.arrIndexGenreSelected.remove(at: indexPath.row)
+        SearchViewController.arrIndexGenreSelected.remove(at: indexPath.row)
         filerGenreCollection.reloadData()
     }
 }

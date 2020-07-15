@@ -10,7 +10,7 @@ import UIKit
 
 class ChapterTableViewCell: UITableViewCell {
     @IBOutlet weak var nameChapter: UILabel!
-    
+        
     override func awakeFromNib() {
         super.awakeFromNib()
     }

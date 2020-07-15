@@ -27,10 +27,10 @@ class KeyWordTableViewCell: UITableViewCell {
     }
 
     @objc func nameTextFieldDidChange(_ textField: UITextField) {
-        Contains.nameKeyWord = textField.text!
+        SearchViewController.nameKeyWord = textField.text!
     }
     
     @objc func authTextFieldDidChange(_ textField: UITextField) {
-        Contains.authKeyWord = textField.text!
+        SearchViewController.authKeyWord = textField.text!
     }
 }

@@ -48,11 +48,11 @@ class StatusSearchTableViewCell: UITableViewCell {
     @objc func changeStatus(_ sender: UIButton) {
         mode = sender.tag
         if mode == 0 {
-            Contains.status = "completed"
+            SearchViewController.status = "completed"
         } else if mode == 1 {
-            Contains.status = "ongoing"
+            SearchViewController.status = "ongoing"
         } else {
-            Contains.status = ""
+            SearchViewController.status = ""
         }
         setUpButton()
     }

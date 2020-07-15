@@ -27,7 +27,6 @@ class ContentChapterViewController: UIViewController {
         scrollImage.minimumZoomScale = 1.0
         scrollImage.maximumZoomScale = 10.0
         if !Contains.didLoadListImage {
-            debugPrint(urlContentChap)
             mangaPark.getListImageChapter(url: urlContentChap)
         }
         backPage.addTarget(self, action: #selector(backPageAction), for: .touchUpInside)
@@ -46,7 +45,6 @@ class ContentChapterViewController: UIViewController {
     
     @objc func reload() {
         commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[0]), placeholderImage: UIImage(named: "down"))
-        debugPrint(Contains.listImageOfChapter[0])
         viewDidLoad()
     }
 
@@ -56,7 +54,6 @@ class ContentChapterViewController: UIViewController {
             currentIndexPage -= 1
             currentPageIndex.text = "\(currentIndexPage + 1)/\(Contains.listImageOfChapter.count)"
             commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[currentIndexPage]), placeholderImage: UIImage(named: "down"))
-            debugPrint(Contains.listImageOfChapter[currentIndexPage])
         }
         if currentIndexPage == 0 {
             backPage.setTitleColor(UIColor.black, for: .normal)

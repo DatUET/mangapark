@@ -32,11 +32,17 @@ extension GenreSearchViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = genreCollection.dequeueReusableCell(withReuseIdentifier: "FilterSearchItemCollectionViewCell", for: indexPath) as! FilterSearchItemCollectionViewCell
-        cell.genre.text = Contains.arrGenre[indexPath.row]
-        if Contains.arrIndexGenreSelected.contains(indexPath.row) {
-            cell.genre.textColor = .blue
+        cell.item.text = Contains.arrGenre[indexPath.row]
+        if SearchViewController.arrIndexGenreSelected.contains(indexPath.row) {
+            cell.item.layer.cornerRadius = 10.0
+            cell.item.layer.masksToBounds = true
+            cell.item.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+            cell.item.textColor = .white
         } else {
-            cell.genre.textColor = .black
+            cell.item.layer.cornerRadius = 10.0
+            cell.item.layer.masksToBounds = false
+            cell.item.backgroundColor = .none
+            cell.item.textColor = .black
         }
         return cell
     }
@@ -44,11 +50,11 @@ extension GenreSearchViewController: UICollectionViewDataSource {
 
 extension GenreSearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if !Contains.arrIndexGenreSelected.contains(indexPath.row) {
-            Contains.arrIndexGenreSelected.append(indexPath.row)
+        if !SearchViewController.arrIndexGenreSelected.contains(indexPath.row) {
+            SearchViewController.arrIndexGenreSelected.append(indexPath.row)
         } else {
-            if let index = Contains.arrIndexGenreSelected.firstIndex(of: indexPath.row) {
-                Contains.arrIndexGenreSelected.remove(at: index)
+            if let index = SearchViewController.arrIndexGenreSelected.firstIndex(of: indexPath.row) {
+                SearchViewController.arrIndexGenreSelected.remove(at: index)
             }
         }
         genreCollection.reloadData()

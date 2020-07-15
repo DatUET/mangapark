@@ -14,7 +14,7 @@ class ReleaseSearchTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        year.text = Contains.yearSearch
+        year.text = SearchViewController.yearSearch
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadYear"), object: nil)
     }
@@ -26,6 +26,6 @@ class ReleaseSearchTableViewCell: UITableViewCell {
     }
 
     @objc func reload() {
-        year.text = Contains.yearSearch
+        year.text = SearchViewController.yearSearch
     }
 }

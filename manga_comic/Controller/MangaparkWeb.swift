@@ -17,33 +17,29 @@ class MangaPark {
         "Cookie": "__cfduid=d6aa29a7052af5e2050820eef37a0a92c1594000986; _ga=GA1.2.641518996.1594000989; _gid=GA1.2.679029208.1594000989; set=theme=1&h=0&img_load=1&img_zoom=1&img_tool=1&twin_m=0&twin_c=0&manga_a_warn=1&history=1&timezone=14; cf_clearance=7f95e221263e69a5f774cde60dfacdf2e27d4d44-1594266809-0-1zedb55dafzff72409cz809c3d3d-150; Hm_lvt_5ee99fa43d3e817978c158dfc8eb72ad=1594173173,1594195360,1594257793,1594283983; _gat_gtag_UA_17788005_10=1; Hm_lpvt_5ee99fa43d3e817978c158dfc8eb72ad=1594284649; __atuvc=290%7C28; __atuvs=5f06afecc8d7ba80036"
     ]
     public func loadAfterLauchApp(collectionView: UICollectionView!) {
-        getMangaHot(page: 1, collectionView: collectionView)
-        getNewManga(page: 1, collectionView: collectionView)
-        getMangaLatest(page: 1, collectionView: collectionView)
+        getMangaHot(page: 1)
+        getNewManga(page: 1)
+        getMangaLatest(page: 1)
         NotificationCenter.default.post(name: NSNotification.Name("reload"), object: nil)
     }
     
-    public func getMangaLatest(page: Int, collectionView: UICollectionView!) {
+    public func getMangaLatest(page: Int) {
         if page == 1 {
-            Contains.arrMangaLastestItem.removeAll()
+            ViewController.arrMangaLastestItem.removeAll()
         }
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
         manager.request("https://mangapark.net/latest/\(page)", method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
-                    //                    debugPrint(response.result.value!)
                     let htmlResult = response.result.value!
                     do {
                         let parsed = try SwiftSoup.parse(htmlResult)
                         
-                        //debugPrint(try parsed.getElementsByClass("ls1").select("div")[0])
                         for e in try parsed.getElementsByClass("ls1")[0].getElementsByClass("item") {
-                            //debugPrint(e)
-                            Contains.arrMangaLastestItem.append(self.parseHtmlListMangaLastest(element: e))
+                            ViewController.arrMangaLastestItem.append(self.parseHtmlListMangaLastest(element: e))
                         }
-                        Contains.arrCurrentMangaItem = Contains.arrMangaLastestItem
-                        collectionView.reloadData()
+                        NotificationCenter.default.post(name: NSNotification.Name("reloadHome"), object: nil)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)
@@ -60,7 +56,6 @@ class MangaPark {
             let urlManga = try element.select("a")[0].attr("href")
             let imageUrl = try element.select("a")[0].select("img").attr("src")
             let newChap = try element.select("ul")[0].select("li")[0].select("span")[0].select("a")[0].text()
-            //            debugPrint("\(name) \(Contains.BASE_URL + urlManga)  https:\(imageUrl)  \(newChap)")
             return MangaItem.init(name: name, url: "\(Contains.BASE_URL + urlManga)", imageUrl: "https:\(imageUrl)", newChap: newChap)
         } catch {
             debugPrint(error)
@@ -68,27 +63,23 @@ class MangaPark {
         }
     }
     
-    public func getMangaHot(page: Int, collectionView: UICollectionView!) {
+    public func getMangaHot(page: Int) {
         if page == 1 {
-            Contains.arrMangaHotItem.removeAll()
+            ViewController.arrMangaHotItem.removeAll()
         }
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
         manager.request("https://mangapark.net/search?orderby=views&page=\(page)", method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
-                    //                    debugPrint(response.result.value!)
                     let htmlResult = response.result.value!
                     do {
                         let parsed = try SwiftSoup.parse(htmlResult)
                         
-                        //debugPrint(try parsed.getElementsByClass("ls1").select("div")[0])
                         for e in try parsed.getElementsByClass("manga-list")[0].getElementsByClass("item") {
-                            //debugPrint(e)
-                            Contains.arrMangaHotItem.append(self.parseListMangaNewOrHot(element: e))
+                            ViewController.arrMangaHotItem.append(self.parseListMangaNewOrHot(element: e))
                         }
-                        Contains.arrCurrentMangaItem = Contains.arrMangaHotItem
-                        collectionView.reloadData()
+                        NotificationCenter.default.post(name: NSNotification.Name("reloadHome"), object: nil)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)
@@ -99,27 +90,23 @@ class MangaPark {
         }
     }
     
-    public func getNewManga(page: Int, collectionView: UICollectionView!) {
+    public func getNewManga(page: Int) {
         if page == 1 {
-            Contains.arrMangaNewItem.removeAll()
+            ViewController.arrMangaNewItem.removeAll()
         }
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
         manager.request("https://mangapark.net/search?orderby=create&page=\(page)", method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
-                    //                    debugPrint(response.result.value!)
                     let htmlResult = response.result.value!
                     do {
                         let parsed = try SwiftSoup.parse(htmlResult)
                         
-                        //debugPrint(try parsed.getElementsByClass("ls1").select("div")[0])
                         for e in try parsed.getElementsByClass("manga-list")[0].getElementsByClass("item") {
-                            //debugPrint(e)
-                            Contains.arrMangaNewItem.append(self.parseListMangaNewOrHot(element: e))
+                            ViewController.arrMangaNewItem.append(self.parseListMangaNewOrHot(element: e))
                         }
-                        Contains.arrCurrentMangaItem = Contains.arrMangaNewItem
-                        collectionView.reloadData()
+                        NotificationCenter.default.post(name: NSNotification.Name("reloadHome"), object: nil)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)
@@ -148,11 +135,10 @@ class MangaPark {
         Alamofire.request(url, method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
-                    //                    debugPrint(response.result.value!)
                     let htmlResult = response.result.value!
                     do {
                         let parsed = try SwiftSoup.parse(htmlResult)
-                        Contains.currentManga = self.parseDetailManga(document: parsed)
+                        MangaViewController.currentManga = self.parseDetailManga(document: parsed)
                         Contains.didLoadDetailManga = true
                         NotificationCenter.default.post(name: NSNotification.Name("reloadDetail"), object: nil)
                         
@@ -234,33 +220,33 @@ class MangaPark {
         var genres = ""
         var rating = ""
         var year = ""
-        if Contains.yearSearch == "null" {
+        if SearchViewController.yearSearch == "null" {
             year = ""
         } else {
-            year = Contains.yearSearch
+            year = SearchViewController.yearSearch
         }
         if page == 1 {
-            Contains.arrSearchMangaItem.removeAll()
+            ResultSearchViewController.arrSearchMangaItem.removeAll()
             collection.reloadData()
         }
-        if Contains.rating > 0 {
-            rating = "\(Contains.rating)"
+        if SearchViewController.rating > 0 {
+            rating = "\(SearchViewController.rating)"
         } else {
             rating = ""
         }
-        for i in Contains.arrIndexGenreSelected {
+        for i in SearchViewController.arrIndexGenreSelected {
             genres += "\(Contains.arrGenre[i]),"
         }
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
-        manager.request("https://mangapark.net/search?orderby=\(orderBy)&q=\(Contains.nameKeyWord)&autart=\(Contains.authKeyWord)&genres=\(genres)&rating=\(rating)&status=\(Contains.status)&years=\(year)&page=\(page)", method: .get, headers: headers)
+        manager.request("https://mangapark.net/search?orderby=\(orderBy)&q=\(SearchViewController.nameKeyWord)&autart=\(SearchViewController.authKeyWord)&genres=\(genres)&rating=\(rating)&status=\(SearchViewController.status)&years=\(year)&page=\(page)", method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
                     let htmlResult = response.result.value!
                     do {
                         let parsed = try SwiftSoup.parse(htmlResult)
                         for item in try parsed.getElementsByClass("item") {
-                            Contains.arrSearchMangaItem.append(self.parseListMangaNewOrHot(element: item))
+                            ResultSearchViewController.arrSearchMangaItem.append(self.parseListMangaNewOrHot(element: item))
                         }
                         collection.reloadData()
                         Contains.loadMore = false

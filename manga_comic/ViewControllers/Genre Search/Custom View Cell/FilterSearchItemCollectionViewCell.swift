@@ -9,6 +9,6 @@
 import UIKit
 
 class FilterSearchItemCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var genre: UILabel!
+    @IBOutlet weak var item: UILabel!
     
 }

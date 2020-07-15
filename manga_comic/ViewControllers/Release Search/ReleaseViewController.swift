@@ -37,11 +37,17 @@ extension ReleaseViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = yearCollection.dequeueReusableCell(withReuseIdentifier: "FilterSearchItemCollectionViewCell", for: indexPath) as! FilterSearchItemCollectionViewCell
-        cell.genre.text = arrYear[indexPath.row]
-        if arrYear[indexPath.row] == Contains.yearSearch {
-            cell.genre.textColor = .blue
+        cell.item.text = arrYear[indexPath.row]
+        if arrYear[indexPath.row] == SearchViewController.yearSearch {
+            cell.item.layer.cornerRadius = 10.0
+            cell.item.layer.masksToBounds = true
+            cell.item.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+            cell.item.textColor = .white
         } else {
-            cell.genre.textColor = .black
+            cell.item.layer.cornerRadius = 10.0
+            cell.item.layer.masksToBounds = false
+            cell.item.backgroundColor = .none
+            cell.item.textColor = .black
         }
         return cell
     }
@@ -49,7 +55,7 @@ extension ReleaseViewController: UICollectionViewDataSource {
 
 extension ReleaseViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        Contains.yearSearch = arrYear[indexPath.row]
+        SearchViewController.yearSearch = arrYear[indexPath.row]
         yearCollection.reloadData()
     }
 }

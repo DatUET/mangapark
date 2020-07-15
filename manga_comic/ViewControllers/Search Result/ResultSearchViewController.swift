@@ -16,6 +16,8 @@ class ResultSearchViewController: UIViewController {
     @IBOutlet weak var createSort: UIButton!
     @IBOutlet weak var viewsSort: UIButton!
     
+    public static var arrSearchMangaItem = [MangaItem]() // danh sách truyện trả về sau khi search
+    
     let mangapark = MangaPark()
     let mangaparkCache = MangaParkCache()
     var page = 1
@@ -84,12 +86,12 @@ class ResultSearchViewController: UIViewController {
 
 extension ResultSearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Contains.arrSearchMangaItem.count
+        return ResultSearchViewController.arrSearchMangaItem.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = resultSearchCollection.dequeueReusableCell(withReuseIdentifier: "MangaCollectionViewCell", for: indexPath) as! MangaCollectionViewCell
-        let mangaItem = Contains.arrSearchMangaItem[indexPath.row]
+        let mangaItem = ResultSearchViewController.arrSearchMangaItem[indexPath.row]
         cell.imageManga.sd_setImage(with: URL(string: mangaItem.imageUrl), placeholderImage: UIImage(named: "down"))
         cell.nameManga.text = mangaItem.name
         cell.newChapManga.text = mangaItem.newChap
@@ -99,7 +101,7 @@ extension ResultSearchViewController: UICollectionViewDataSource {
 
 extension ResultSearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let mangaItem = Contains.arrSearchMangaItem[indexPath.row]
+        let mangaItem = ResultSearchViewController.arrSearchMangaItem[indexPath.row]
         let detailManga = storyboard?.instantiateViewController(withIdentifier: "MangaViewController") as? MangaViewController
         detailManga?.urlManga = mangaItem.url
         detailManga?.nameManga = mangaItem.name
@@ -107,9 +109,9 @@ extension ResultSearchViewController: UICollectionViewDelegate {
         if mangaparkCache.checkExitItem(nameManga: mangaItem.name, nameEntity: Contains.RECENT_CORE_DATA) {
             mangaparkCache.deleteItem(nameManga: mangaItem.name, nameEntity: Contains.RECENT_CORE_DATA)
         }
-        self.mangaparkCache.savaMangaToCoreData(mangaItem: Contains.arrSearchMangaItem[indexPath.row], nameEntity: Contains.RECENT_CORE_DATA)
+        self.mangaparkCache.savaMangaToCoreData(mangaItem: ResultSearchViewController.arrSearchMangaItem[indexPath.row], nameEntity: Contains.RECENT_CORE_DATA)
         Contains.didLoadDetailManga = false
-        Contains.currentManga.removeDetails()
+        MangaViewController.currentManga.removeDetails()
         self.navigationController?.pushViewController(detailManga!, animated: true)
     }
     

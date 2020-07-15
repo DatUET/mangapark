@@ -16,6 +16,8 @@ class MangaViewController: UIViewController {
     var imageUrl = ""
     var exitBookmark = false
     
+    public static var currentManga = DetailManga.init() // mỗi lần bấm vào 1 bộ chuyện currentManga sẽ thay đổi
+    
     let mangapark = MangaPark()
     let mangaparkChache = MangaParkCache()
     
@@ -54,7 +56,7 @@ class MangaViewController: UIViewController {
 
 extension MangaViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Contains.currentManga.volumAndChap.count + 1
+        return MangaViewController.currentManga.volumAndChap.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -62,21 +64,21 @@ extension MangaViewController: UITableViewDataSource {
             let cell = mangaTable.dequeueReusableCell(withIdentifier: "MangaDetailTableViewCell") as! MangaDetailTableViewCell
             cell.nameLb.text = nameManga
             cell.imageManga.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "down"))
-            cell.ratingOverview.text = "Rating: " + Contains.currentManga.ratingOverview
-            cell.popularity.text = "Popularity: " + Contains.currentManga.popularity
-            cell.alternative.text = "Alternative: " + Contains.currentManga.alternative
-            cell.authors.text = "Author(s): " + Contains.currentManga.authors
-            cell.artists.text = "Artist(s): "  + Contains.currentManga.artist
-            cell.genre.text = "Genre(s): " + Contains.currentManga.genre
-            cell.type.text = "Type: " + Contains.currentManga.type
-            cell.status.text = "Status: " + Contains.currentManga.status
-            cell.mergeBy.text = "Merged By: " + Contains.currentManga.mergeBy
-            cell.lastest.text = "Latest: " + Contains.currentManga.lastest
-            cell.summary.text = "Summary: " + Contains.currentManga.summary
+            cell.ratingOverview.text = "Rating: " + MangaViewController.currentManga.ratingOverview
+            cell.popularity.text = "Popularity: " + MangaViewController.currentManga.popularity
+            cell.alternative.text = "Alternative: " + MangaViewController.currentManga.alternative
+            cell.authors.text = "Author(s): " + MangaViewController.currentManga.authors
+            cell.artists.text = "Artist(s): "  + MangaViewController.currentManga.artist
+            cell.genre.text = "Genre(s): " + MangaViewController.currentManga.genre
+            cell.type.text = "Type: " + MangaViewController.currentManga.type
+            cell.status.text = "Status: " + MangaViewController.currentManga.status
+            cell.mergeBy.text = "Merged By: " + MangaViewController.currentManga.mergeBy
+            cell.lastest.text = "Latest: " + MangaViewController.currentManga.lastest
+            cell.summary.text = "Summary: " + MangaViewController.currentManga.summary
             return cell
         } else {
             let cell = mangaTable.dequeueReusableCell(withIdentifier: "ChapterTableViewCell") as! ChapterTableViewCell
-            let chapter = Contains.currentManga.volumAndChap[indexPath.row - 1]
+            let chapter = MangaViewController.currentManga.volumAndChap[indexPath.row - 1]
             cell.nameChapter.text = chapter.name
             return cell
         }
@@ -87,7 +89,7 @@ extension MangaViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row > 0 {
             let contentChater = storyboard?.instantiateViewController(withIdentifier: "ContentChapterViewController") as? ContentChapterViewController
-            contentChater?.urlContentChap = Contains.currentManga.volumAndChap[indexPath.row - 1].urlVolumAndChap
+            contentChater?.urlContentChap = MangaViewController.currentManga.volumAndChap[indexPath.row - 1].urlVolumAndChap
             self.navigationController?.pushViewController(contentChater!, animated: true)
         }
     }

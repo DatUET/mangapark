@@ -16,17 +16,19 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var searchTable: UITableView!
     @IBOutlet weak var searchButton: UIButton!
     
-    var nameKeyWord = ""
-    var authKeyWord = ""
-    var numberStar = 0
-    var arrGenre = [String]()
+    public static var arrIndexGenreSelected = [Int]() // danh sách chứa vị trí các genre đã đc chọn
+    public static var rating = 0 // số star để search
+    public static var nameKeyWord = "" // tên bộ chuyện để search
+    public static var authKeyWord = "" // tên tác giả, hoạ sĩ để search
+    public static var yearSearch = "" // năm release để search
+    public static var status = "" // trạng thái của bộ truyện để search
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Search"
-        Contains.arrIndexGenreSelected.removeAll()
-        Contains.status = ""
-        Contains.yearSearch = ""
+        SearchViewController.arrIndexGenreSelected.removeAll()
+        SearchViewController.status = ""
+        SearchViewController.yearSearch = ""
         
         searchTable.dataSource = self
         searchTable.delegate = self
@@ -49,23 +51,27 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
             let cell = searchTable.dequeueReusableCell(withIdentifier: "KeyWordTableViewCell") as! KeyWordTableViewCell
-            nameKeyWord = cell.nameKeyWord.text!
-            authKeyWord = cell.nameKeyWord.text!
+            cell.selectionStyle = .none
             return cell
         }  else if indexPath.row == 1 {
             let cell = searchTable.dequeueReusableCell(withIdentifier: "RatingTableViewCell") as! RatingTableViewCell
+            cell.selectionStyle = .none
             return cell
         } else if indexPath.row == 2 {
             let cell = searchTable.dequeueReusableCell(withIdentifier: "StatusSearchTableViewCell") as! StatusSearchTableViewCell
+            cell.selectionStyle = .none
             return cell
         } else if indexPath.row == 3 {
             let cell = searchTable.dequeueReusableCell(withIdentifier: "ReleaseSearchTableViewCell") as! ReleaseSearchTableViewCell
+            cell.selectionStyle = .none
             return cell
         } else if indexPath.row == 4 {
             let cell = searchTable.dequeueReusableCell(withIdentifier: "GenreTableViewCell") as! GenreTableViewCell
+            cell.selectionStyle = .none
             return cell
         } else {
             let cell = searchTable.dequeueReusableCell(withIdentifier: "FilterGenreTableViewCell") as! FilterGenreTableViewCell
+            cell.selectionStyle = .none
             return cell
             
         }

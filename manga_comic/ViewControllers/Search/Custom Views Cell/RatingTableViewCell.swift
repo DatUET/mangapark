@@ -46,13 +46,13 @@ class RatingTableViewCell: UITableViewCell {
     }
     
     @objc func changeStar(_ sender: UIButton) {
-        Contains.rating = sender.tag
-        for i in 0...Contains.rating {
+        SearchViewController.rating = sender.tag
+        for i in 0...SearchViewController.rating {
             let btnImage = UIImage(named: "star yellow")
             arrBtn[i].setImage(btnImage , for: .normal)
         }
-        if Contains.rating < 4 {
-            for i in (Contains.rating + 1)...4 {
+        if SearchViewController.rating < 4 {
+            for i in (SearchViewController.rating + 1)...4 {
                 let btnImage = UIImage(named: "star")
                 arrBtn[i].setImage(btnImage , for: .normal)
             }

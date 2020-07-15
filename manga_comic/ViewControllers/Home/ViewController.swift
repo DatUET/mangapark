@@ -13,6 +13,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var colectionManga: UICollectionView!
     @IBOutlet weak var mangaSegment: UISegmentedControl!
     
+    var arrCurrentMangaItem = [MangaItem]()
+    public static var arrMangaLastestItem = [MangaItem]() // danh sách truyện mới cập nhật
+    public static var arrMangaHotItem = [MangaItem]() // danh sách truyện thịnh hành
+    public static var arrMangaNewItem = [MangaItem]()
+    
     var mangapark = MangaPark()
     let mangaparkCache = MangaParkCache()
     var currentPageLastest = 1
@@ -33,7 +38,7 @@ class ViewController: UIViewController {
         tabBarController?.navigationItem.rightBarButtonItem = button
         mangapark.loadAfterLauchApp(collectionView: colectionManga)
         mangaSegment.addTarget(self, action: #selector(changeTab(sender:)), for: .valueChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reload"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadHome"), object: nil)
     }
     
     @objc func goToSearch() {
@@ -42,20 +47,26 @@ class ViewController: UIViewController {
     }
     
     @objc func reload() {
-        Contains.arrCurrentMangaItem = Contains.arrMangaLastestItem
+        if mangaSegment.selectedSegmentIndex == 0 {
+            arrCurrentMangaItem = ViewController.arrMangaLastestItem
+        } else if mangaSegment.selectedSegmentIndex == 1 {
+            arrCurrentMangaItem = ViewController.arrMangaNewItem
+        } else if mangaSegment.selectedSegmentIndex == 2 {
+            arrCurrentMangaItem = ViewController.arrMangaHotItem
+        }
         colectionManga.reloadData()
     }
 
     @objc func changeTab(sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
              colectionManga.setContentOffset(CGPoint(x:0,y:yLastest), animated: true)
-            Contains.arrCurrentMangaItem = Contains.arrMangaLastestItem
+            arrCurrentMangaItem = ViewController.arrMangaLastestItem
         } else if sender.selectedSegmentIndex == 1 {
             colectionManga.setContentOffset(CGPoint(x:0,y:yNew), animated: true)
-            Contains.arrCurrentMangaItem = Contains.arrMangaNewItem
+            arrCurrentMangaItem = ViewController.arrMangaNewItem
         } else if sender.selectedSegmentIndex == 2 {
             colectionManga.setContentOffset(CGPoint(x:0,y:yHot), animated: true)
-            Contains.arrCurrentMangaItem = Contains.arrMangaHotItem
+            arrCurrentMangaItem = ViewController.arrMangaHotItem
         }
         colectionManga.reloadData()
     }
@@ -63,12 +74,12 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Contains.arrCurrentMangaItem.count
+        return arrCurrentMangaItem.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MangaCollectionViewCell", for: indexPath) as! MangaCollectionViewCell
-        let mangaItem = Contains.arrCurrentMangaItem[indexPath.row]
+        let mangaItem = arrCurrentMangaItem[indexPath.row]
         cell.imageManga.sd_setImage(with: URL(string: mangaItem.imageUrl), placeholderImage: UIImage(named: "down"))
         cell.nameManga.text = mangaItem.name
         cell.newChapManga.text = mangaItem.newChap
@@ -78,7 +89,7 @@ extension ViewController: UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let mangaItem = Contains.arrCurrentMangaItem[indexPath.row]
+        let mangaItem = arrCurrentMangaItem[indexPath.row]
         let detailManga = storyboard?.instantiateViewController(withIdentifier: "MangaViewController") as? MangaViewController
         detailManga?.urlManga = mangaItem.url
         detailManga?.nameManga = mangaItem.name
@@ -86,9 +97,9 @@ extension ViewController: UICollectionViewDelegate {
         if mangaparkCache.checkExitItem(nameManga: mangaItem.name, nameEntity: Contains.RECENT_CORE_DATA) {
             mangaparkCache.deleteItem(nameManga: mangaItem.name, nameEntity: Contains.RECENT_CORE_DATA)
         }
-        self.mangaparkCache.savaMangaToCoreData(mangaItem: Contains.arrCurrentMangaItem[indexPath.row], nameEntity: Contains.RECENT_CORE_DATA)
+        self.mangaparkCache.savaMangaToCoreData(mangaItem: arrCurrentMangaItem[indexPath.row], nameEntity: Contains.RECENT_CORE_DATA)
         Contains.didLoadDetailManga = false
-        Contains.currentManga.removeDetails()
+        MangaViewController.currentManga.removeDetails()
         self.navigationController?.pushViewController(detailManga!, animated: true)
     }
     
@@ -113,14 +124,14 @@ extension ViewController: UICollectionViewDelegate {
         Contains.loadMore =  true
         if mangaSegment.selectedSegmentIndex == 0 {
             currentPageLastest += 1
-            mangapark.getMangaLatest(page: currentPageLastest, collectionView: colectionManga)
+            mangapark.getMangaLatest(page: currentPageLastest)
         } else if mangaSegment.selectedSegmentIndex == 1 {
             currentPageNew += 1
             debugPrint(currentPageNew)
-            mangapark.getNewManga(page: currentPageNew, collectionView: colectionManga)
+            mangapark.getNewManga(page: currentPageNew)
         } else if mangaSegment.selectedSegmentIndex == 2 {
             currentPageHot += 1
-            mangapark.getMangaHot(page: currentPageHot, collectionView: colectionManga)
+            mangapark.getMangaHot(page: currentPageHot)
         }
     }
 }
@@ -129,8 +140,8 @@ extension ViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let tabBarIndex = tabBarController.selectedIndex
         if tabBarIndex == 1 {
-            Contains.arrBookmarkManga = self.mangaparkCache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
-            Contains.arrRecentManga = self.mangaparkCache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
+            ReadingViewController.arrBookmarkManga = self.mangaparkCache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
+            ReadingViewController.arrRecentManga = self.mangaparkCache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
             viewController.viewDidLoad()
         }
     }
