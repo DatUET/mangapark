@@ -16,7 +16,7 @@ class MangaViewController: UIViewController {
     var imageUrl = ""
     var exitBookmark = false
     
-    public static var currentManga = DetailManga.init() // mỗi lần bấm vào 1 bộ chuyện currentManga sẽ thay đổi
+    public static var currentManga = DetailManga.init() // mỗi lần bấm vào 1 bộ truyện currentManga sẽ thay đổi
     
     let mangapark = MangaPark()
     let mangaparkChache = MangaParkCache()
@@ -26,21 +26,24 @@ class MangaViewController: UIViewController {
         self.title = nameManga
         mangaTable.dataSource = self
         mangaTable.delegate = self
-        exitBookmark = mangaparkChache.checkExitItem(nameManga: nameManga, nameEntity: Contains.BOOKMARK_CORE_DATA)
         if !Contains.didLoadDetailManga {
             mangapark.getDetailManga(url: urlManga)
         }
+        addButtonBookmark()
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadDetail"), object: nil)
+    }
+    
+    func addButtonBookmark() {
+        exitBookmark = mangaparkChache.checkExitItem(nameManga: nameManga, nameEntity: Contains.BOOKMARK_CORE_DATA)
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.bookmarks, target: self, action: #selector(addBookmark))
         if exitBookmark {
             button.tintColor = .black
         }
         navigationItem.rightBarButtonItem = button
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadDetail"), object: nil)
     }
     
     @objc func reload() {
         mangaTable.reloadData()
-        self.viewDidLoad()
     }
     
     @objc func addBookmark() {
@@ -50,7 +53,7 @@ class MangaViewController: UIViewController {
             mangaparkChache.savaMangaToCoreData(mangaItem: MangaItem.init(name: nameManga, url: urlManga, imageUrl: imageUrl, newChap: ""), nameEntity: Contains.BOOKMARK_CORE_DATA)
         }
         NotificationCenter.default.post(name: NSNotification.Name("reloadReading"), object: nil)
-        viewDidLoad()
+        addButtonBookmark()
     }
 }
 
@@ -87,8 +90,9 @@ extension MangaViewController: UITableViewDataSource {
 
 extension MangaViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
         if indexPath.row > 0 {
-            let contentChater = storyboard?.instantiateViewController(withIdentifier: "ContentChapterViewController") as? ContentChapterViewController
+            let contentChater = storyboard.instantiateViewController(withIdentifier: "ContentChapterViewController") as? ContentChapterViewController
             contentChater?.urlContentChap = MangaViewController.currentManga.volumAndChap[indexPath.row - 1].urlVolumAndChap
             self.navigationController?.pushViewController(contentChater!, animated: true)
         }

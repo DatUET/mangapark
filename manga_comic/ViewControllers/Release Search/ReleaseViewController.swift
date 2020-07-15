@@ -19,6 +19,7 @@ class ReleaseViewController: UIViewController {
         yearCollection.delegate = self
 
         arrYear.append("null")
+        arrYear.append("1905")
         for i in 1946...2017 {
             arrYear.append("\(i)")
         }

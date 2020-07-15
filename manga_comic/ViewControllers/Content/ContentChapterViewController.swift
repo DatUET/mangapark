@@ -35,17 +35,20 @@ class ContentChapterViewController: UIViewController {
         swipeLeft.addTarget(self, action: #selector(nextPageAction))
         scrollImage.addGestureRecognizer(swipeLeft)
         scrollImage.addGestureRecognizer(swipeRight)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadContentImage"), object: nil)
+    }
+    
+    func setupLabelCurrentPage() {
         if Contains.listImageOfChapter.isEmpty {
             currentPageIndex.text = "0/0"
         } else {
             currentPageIndex.text = "\(currentIndexPage + 1)/\(Contains.listImageOfChapter.count)"
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadContentImage"), object: nil)
     }
     
     @objc func reload() {
         commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[0]), placeholderImage: UIImage(named: "down"))
-        viewDidLoad()
+        setupLabelCurrentPage()
     }
 
     @objc func backPageAction() {

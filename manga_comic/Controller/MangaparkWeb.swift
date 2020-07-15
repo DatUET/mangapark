@@ -141,7 +141,6 @@ class MangaPark {
                         MangaViewController.currentManga = self.parseDetailManga(document: parsed)
                         Contains.didLoadDetailManga = true
                         NotificationCenter.default.post(name: NSNotification.Name("reloadDetail"), object: nil)
-                        
                     } catch {
                         debugPrint(error)
                     }
@@ -216,7 +215,7 @@ class MangaPark {
         }
     }
     
-    public func search(orderBy: String, page: Int, collection: UICollectionView!) {
+    public func search(orderBy: String, page: Int) {
         var genres = ""
         var rating = ""
         var year = ""
@@ -227,7 +226,7 @@ class MangaPark {
         }
         if page == 1 {
             ResultSearchViewController.arrSearchMangaItem.removeAll()
-            collection.reloadData()
+            NotificationCenter.default.post(name: NSNotification.Name("reloadSearchResult"), object: nil)
         }
         if SearchViewController.rating > 0 {
             rating = "\(SearchViewController.rating)"
@@ -248,7 +247,7 @@ class MangaPark {
                         for item in try parsed.getElementsByClass("item") {
                             ResultSearchViewController.arrSearchMangaItem.append(self.parseListMangaNewOrHot(element: item))
                         }
-                        collection.reloadData()
+                        NotificationCenter.default.post(name: NSNotification.Name("reloadSearchResult"), object: nil)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)

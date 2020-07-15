@@ -50,7 +50,8 @@ class ResultSearchViewController: UIViewController {
         
         setUpButton()
         
-        mangapark.search(orderBy: orderBy, page: page, collection: resultSearchCollection)
+        mangapark.search(orderBy: orderBy, page: page)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadSearchResult"), object: nil)
     }
     
     func setUpButton() {
@@ -78,8 +79,12 @@ class ResultSearchViewController: UIViewController {
             orderBy = "views_a"
         }
         setUpButton()
-        mangapark.search(orderBy: orderBy, page: page, collection: resultSearchCollection)
+        mangapark.search(orderBy: orderBy, page: page)
         resultSearchCollection.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+    }
+    
+    @objc func reload() {
+        resultSearchCollection.reloadData()
     }
     
 }
@@ -118,7 +123,7 @@ extension ResultSearchViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contenHeight = scrollView.contentSize.height
-        if offsetY > contenHeight - scrollView.frame.height {
+        if offsetY > contenHeight - scrollView.frame.height && offsetY > 0 {
             if !Contains.loadMore {
                 page += 1
                 nextPage()
@@ -128,6 +133,6 @@ extension ResultSearchViewController: UICollectionViewDelegate {
     
     @objc func nextPage() {
         Contains.loadMore =  true
-        mangapark.search(orderBy: orderBy, page: page, collection: resultSearchCollection)
+        mangapark.search(orderBy: orderBy, page: page)
     }
 }

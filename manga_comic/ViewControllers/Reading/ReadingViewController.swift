@@ -21,20 +21,24 @@ class ReadingViewController: UIViewController {
         super.viewDidLoad()
         readingCollection.dataSource = self
         readingCollection.delegate = self
+        setUpCollection()
+        readSegment.addTarget(self, action: #selector(changeTab(sender:)), for: .valueChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadReading"), object: nil)
+    }
+    
+    func setUpCollection() {
         if readSegment.selectedSegmentIndex == 0 {
             arrReadingItem = ReadingViewController.arrBookmarkManga.reversed()
         } else {
             arrReadingItem = ReadingViewController.arrRecentManga.reversed()
         }
         readingCollection.reloadData()
-        readSegment.addTarget(self, action: #selector(changeTab(sender:)), for: .valueChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadReading"), object: nil)
     }
     
     @objc func reload() {
-        ReadingViewController.arrBookmarkManga = self.mangaparkChache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
-        ReadingViewController.arrRecentManga = self.mangaparkChache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
-        viewDidLoad()
+        ReadingViewController.arrBookmarkManga = mangaparkChache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
+        ReadingViewController.arrRecentManga = mangaparkChache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
+        setUpCollection()
     }
     
     @objc func changeTab(sender: UISegmentedControl) {
@@ -64,7 +68,8 @@ extension ReadingViewController: UICollectionViewDataSource {
 
 extension ReadingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailManga = storyboard?.instantiateViewController(withIdentifier: "MangaViewController") as? MangaViewController
+        let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+        let detailManga = storyboard.instantiateViewController(withIdentifier: "MangaViewController") as? MangaViewController
         detailManga?.urlManga = arrReadingItem[indexPath.row].url
         detailManga?.nameManga = arrReadingItem[indexPath.row].name
         detailManga?.imageUrl = arrReadingItem[indexPath.row].imageUrl

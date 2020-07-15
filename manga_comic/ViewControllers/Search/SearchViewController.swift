@@ -80,11 +80,12 @@ extension SearchViewController: UITableViewDataSource {
 
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
         if indexPath.row == 4 {
-            let genreSearch = storyboard?.instantiateViewController(withIdentifier: "GenreSearchView") as! GenreSearchViewController
+            let genreSearch = storyboard.instantiateViewController(withIdentifier: "GenreSearchView") as! GenreSearchViewController
             navigationController?.pushViewController(genreSearch, animated: true)
         } else if indexPath.row == 3 {
-            let releaseSearch = storyboard?.instantiateViewController(withIdentifier: "ReleaseViewController") as! ReleaseViewController
+            let releaseSearch = storyboard.instantiateViewController(withIdentifier: "ReleaseViewController") as! ReleaseViewController
             navigationController?.pushViewController(releaseSearch, animated: true)
         }
     }

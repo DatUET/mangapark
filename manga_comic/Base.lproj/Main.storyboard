@@ -800,29 +800,39 @@
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="67.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mlw-Pi-57J">
-                                                    <rect key="frame" x="20" y="23" width="50" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mlw-Pi-57J">
+                                                    <rect key="frame" x="20" y="23" width="50" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aW2-ao-Uc6">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aW2-ao-Uc6">
                                                     <rect key="frame" x="107" y="18" width="76" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Completed"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nyg-NZ-xdd">
-                                                    <rect key="frame" x="206" y="18" width="59" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nyg-NZ-xdd">
+                                                    <rect key="frame" x="191" y="18" width="59" height="30"/>
                                                     <state key="normal" title="Ongoing"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcj-kN-ym7">
-                                                    <rect key="frame" x="310" y="19" width="30" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcj-kN-ym7">
+                                                    <rect key="frame" x="258" y="18" width="30" height="30"/>
                                                     <state key="normal" title="All"/>
                                                 </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="nyg-NZ-xdd" firstAttribute="leading" secondItem="aW2-ao-Uc6" secondAttribute="trailing" constant="8" id="C10-bx-YfX"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="nyg-NZ-xdd" secondAttribute="bottom" constant="9" id="EEK-pT-Zdw"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="aW2-ao-Uc6" secondAttribute="bottom" constant="9" id="FAj-Va-6hp"/>
+                                                <constraint firstItem="aW2-ao-Uc6" firstAttribute="top" secondItem="hhF-CP-hbD" secondAttribute="topMargin" constant="7" id="Gwq-Ah-J9J"/>
+                                                <constraint firstItem="hcj-kN-ym7" firstAttribute="top" secondItem="hhF-CP-hbD" secondAttribute="topMargin" constant="7" id="Lgf-2j-z7d"/>
+                                                <constraint firstItem="mlw-Pi-57J" firstAttribute="top" secondItem="hhF-CP-hbD" secondAttribute="topMargin" constant="12" id="Q1B-eB-Q2I"/>
+                                                <constraint firstItem="mlw-Pi-57J" firstAttribute="leading" secondItem="hhF-CP-hbD" secondAttribute="leadingMargin" id="Sy7-RG-999"/>
+                                                <constraint firstItem="aW2-ao-Uc6" firstAttribute="leading" secondItem="mlw-Pi-57J" secondAttribute="trailing" constant="37" id="WGr-Hi-4kb"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="hcj-kN-ym7" secondAttribute="bottom" constant="9" id="c8a-Fv-qe5"/>
+                                                <constraint firstItem="hcj-kN-ym7" firstAttribute="leading" secondItem="nyg-NZ-xdd" secondAttribute="trailing" constant="8" id="f1C-X8-7J4"/>
+                                                <constraint firstItem="nyg-NZ-xdd" firstAttribute="top" secondItem="hhF-CP-hbD" secondAttribute="topMargin" constant="7" id="g4X-JS-2vU"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="mlw-Pi-57J" secondAttribute="bottom" constant="12" id="tLQ-qQ-yq2"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="completed" destination="aW2-ao-Uc6" id="S2z-3e-ijF"/>
@@ -940,7 +950,7 @@
                                                                 <constraint firstAttribute="trailingMargin" secondItem="XmY-aa-BjQ" secondAttribute="trailing" id="adN-7N-FDF"/>
                                                             </constraints>
                                                             <connections>
-                                                                <outlet property="genre" destination="XmY-aa-BjQ" id="gwC-j9-Nu7"/>
+                                                                <outlet property="item" destination="XmY-aa-BjQ" id="uhA-iB-wIh"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>

@@ -42,7 +42,8 @@ class ViewController: UIViewController {
     }
     
     @objc func goToSearch() {
-        let searchViewController = storyboard?.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController
+        let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+        let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController
         self.navigationController?.pushViewController(searchViewController!, animated: true)
     }
     
@@ -127,7 +128,6 @@ extension ViewController: UICollectionViewDelegate {
             mangapark.getMangaLatest(page: currentPageLastest)
         } else if mangaSegment.selectedSegmentIndex == 1 {
             currentPageNew += 1
-            debugPrint(currentPageNew)
             mangapark.getNewManga(page: currentPageNew)
         } else if mangaSegment.selectedSegmentIndex == 2 {
             currentPageHot += 1
@@ -140,9 +140,7 @@ extension ViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let tabBarIndex = tabBarController.selectedIndex
         if tabBarIndex == 1 {
-            ReadingViewController.arrBookmarkManga = self.mangaparkCache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
-            ReadingViewController.arrRecentManga = self.mangaparkCache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
-            viewController.viewDidLoad()
+            (viewController as! ReadingViewController).reload()
         }
     }
 }
