@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+// swift
 //  manga_comic
 //
 //  Created by gem on 7/6/20.
@@ -14,9 +14,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var mangaSegment: UISegmentedControl!
     
     var arrCurrentMangaItem = [MangaItem]()
-    public static var arrMangaLastestItem = [MangaItem]() // danh sách truyện mới cập nhật
-    public static var arrMangaHotItem = [MangaItem]() // danh sách truyện thịnh hành
-    public static var arrMangaNewItem = [MangaItem]()
+    var arrMangaLastestItem = [MangaItem]() // danh sách truyện mới cập nhật
+    var arrMangaHotItem = [MangaItem]() // danh sách truyện thịnh hành
+    var arrMangaNewItem = [MangaItem]()
     
     var mangapark = MangaPark()
     let mangaparkCache = MangaParkCache()
@@ -36,9 +36,10 @@ class ViewController: UIViewController {
         self.tabBarController?.title = "Manga"
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.search, target: self, action: #selector(goToSearch))
         tabBarController?.navigationItem.rightBarButtonItem = button
-        mangapark.loadAfterLauchApp(collectionView: colectionManga)
+        mangapark.getMangaLatest(page: currentPageLastest, callback: addMangaLatest(arr:))
+        mangapark.getNewManga(page: currentPageNew, callback: addMangaNew(arr:))
+        mangapark.getMangaHot(page: currentPageHot, callback: addMangaHot(arr:))
         mangaSegment.addTarget(self, action: #selector(changeTab(sender:)), for: .valueChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadHome"), object: nil)
     }
     
     @objc func goToSearch() {
@@ -47,13 +48,13 @@ class ViewController: UIViewController {
         self.navigationController?.pushViewController(searchViewController!, animated: true)
     }
     
-    @objc func reload() {
+    func reload() {
         if mangaSegment.selectedSegmentIndex == 0 {
-            arrCurrentMangaItem = ViewController.arrMangaLastestItem
+            arrCurrentMangaItem = arrMangaLastestItem
         } else if mangaSegment.selectedSegmentIndex == 1 {
-            arrCurrentMangaItem = ViewController.arrMangaNewItem
+            arrCurrentMangaItem = arrMangaNewItem
         } else if mangaSegment.selectedSegmentIndex == 2 {
-            arrCurrentMangaItem = ViewController.arrMangaHotItem
+            arrCurrentMangaItem = arrMangaHotItem
         }
         colectionManga.reloadData()
     }
@@ -61,13 +62,13 @@ class ViewController: UIViewController {
     @objc func changeTab(sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
              colectionManga.setContentOffset(CGPoint(x:0,y:yLastest), animated: true)
-            arrCurrentMangaItem = ViewController.arrMangaLastestItem
+            arrCurrentMangaItem = arrMangaLastestItem
         } else if sender.selectedSegmentIndex == 1 {
             colectionManga.setContentOffset(CGPoint(x:0,y:yNew), animated: true)
-            arrCurrentMangaItem = ViewController.arrMangaNewItem
+            arrCurrentMangaItem = arrMangaNewItem
         } else if sender.selectedSegmentIndex == 2 {
             colectionManga.setContentOffset(CGPoint(x:0,y:yHot), animated: true)
-            arrCurrentMangaItem = ViewController.arrMangaHotItem
+            arrCurrentMangaItem = arrMangaHotItem
         }
         colectionManga.reloadData()
     }
@@ -99,8 +100,6 @@ extension ViewController: UICollectionViewDelegate {
             mangaparkCache.deleteItem(nameManga: mangaItem.name, nameEntity: Contains.RECENT_CORE_DATA)
         }
         self.mangaparkCache.savaMangaToCoreData(mangaItem: arrCurrentMangaItem[indexPath.row], nameEntity: Contains.RECENT_CORE_DATA)
-        Contains.didLoadDetailManga = false
-        MangaViewController.currentManga.removeDetails()
         self.navigationController?.pushViewController(detailManga!, animated: true)
     }
     
@@ -125,14 +124,35 @@ extension ViewController: UICollectionViewDelegate {
         Contains.loadMore =  true
         if mangaSegment.selectedSegmentIndex == 0 {
             currentPageLastest += 1
-            mangapark.getMangaLatest(page: currentPageLastest)
+            mangapark.getMangaLatest(page: currentPageLastest, callback: addMangaLatest(arr:))
         } else if mangaSegment.selectedSegmentIndex == 1 {
             currentPageNew += 1
-            mangapark.getNewManga(page: currentPageNew)
+            mangapark.getNewManga(page: currentPageNew, callback: addMangaNew(arr:))
         } else if mangaSegment.selectedSegmentIndex == 2 {
             currentPageHot += 1
-            mangapark.getMangaHot(page: currentPageHot)
+            mangapark.getMangaHot(page: currentPageHot, callback: addMangaHot(arr:))
         }
+    }
+    
+    func addMangaLatest(arr: [MangaItem]) {
+        for item in arr {
+            arrMangaLastestItem.append(item)
+        }
+        reload()
+    }
+    
+    func addMangaNew(arr: [MangaItem]) {
+        for item in arr {
+            arrMangaNewItem.append(item)
+        }
+        reload()
+    }
+    
+    func addMangaHot(arr: [MangaItem]) {
+        for item in arr {
+            arrMangaHotItem.append(item)
+        }
+        reload()
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  ContentChapterViewController.swift
+//  swift
 //  manga_comic
 //
 //  Created by gem on 7/8/20.
@@ -20,43 +20,44 @@ class ContentChapterViewController: UIViewController {
     @IBOutlet var swipeLeft: UISwipeGestureRecognizer!
     @IBOutlet var swipeRight: UISwipeGestureRecognizer!
     
+    var listImageOfChapter = [String]() // danh sách link imaga cho mỗi chap, sẽ đc thay đổi khi đọc 1 chap
     var currentIndexPage = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollImage.minimumZoomScale = 1.0
         scrollImage.maximumZoomScale = 10.0
-        if !Contains.didLoadListImage {
-            mangaPark.getListImageChapter(url: urlContentChap)
-        }
+        mangaPark.getListImageChapter(url: urlContentChap, callback: addImaga(arr:))
         backPage.addTarget(self, action: #selector(backPageAction), for: .touchUpInside)
         nextPage.addTarget(self, action: #selector(nextPageAction), for: .touchUpInside)
         swipeRight.addTarget(self, action: #selector(backPageAction))
         swipeLeft.addTarget(self, action: #selector(nextPageAction))
         scrollImage.addGestureRecognizer(swipeLeft)
         scrollImage.addGestureRecognizer(swipeRight)
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadContentImage"), object: nil)
+    }
+    
+    func addImaga(arr: [String]) {
+        for i in arr {
+            listImageOfChapter.append(i)
+        }
+        commicImage.sd_setImage(with: URL(string: listImageOfChapter[0]), placeholderImage: UIImage(named: "down"))
+        setupLabelCurrentPage()
     }
     
     func setupLabelCurrentPage() {
-        if Contains.listImageOfChapter.isEmpty {
+        if listImageOfChapter.isEmpty {
             currentPageIndex.text = "0/0"
         } else {
-            currentPageIndex.text = "\(currentIndexPage + 1)/\(Contains.listImageOfChapter.count)"
+            currentPageIndex.text = "\(currentIndexPage + 1)/\(listImageOfChapter.count)"
         }
-    }
-    
-    @objc func reload() {
-        commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[0]), placeholderImage: UIImage(named: "down"))
-        setupLabelCurrentPage()
     }
 
     @objc func backPageAction() {
         if currentIndexPage > 0 {
             nextPage.setTitleColor(UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1), for: .normal)
             currentIndexPage -= 1
-            currentPageIndex.text = "\(currentIndexPage + 1)/\(Contains.listImageOfChapter.count)"
-            commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[currentIndexPage]), placeholderImage: UIImage(named: "down"))
+            currentPageIndex.text = "\(currentIndexPage + 1)/\(listImageOfChapter.count)"
+            commicImage.sd_setImage(with: URL(string: listImageOfChapter[currentIndexPage]), placeholderImage: UIImage(named: "down"))
         }
         if currentIndexPage == 0 {
             backPage.setTitleColor(UIColor.black, for: .normal)
@@ -66,13 +67,13 @@ class ContentChapterViewController: UIViewController {
     }
     
     @objc func nextPageAction() {
-        if currentIndexPage < Contains.listImageOfChapter.count - 1 {
+        if currentIndexPage < listImageOfChapter.count - 1 {
             backPage.setTitleColor(UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1), for: .normal)
             currentIndexPage += 1
-            currentPageIndex.text = "\(currentIndexPage + 1)/\(Contains.listImageOfChapter.count)"
-            commicImage.sd_setImage(with: URL(string: Contains.listImageOfChapter[currentIndexPage]), placeholderImage: UIImage(named: "down"))
+            currentPageIndex.text = "\(currentIndexPage + 1)/\(listImageOfChapter.count)"
+            commicImage.sd_setImage(with: URL(string: listImageOfChapter[currentIndexPage]), placeholderImage: UIImage(named: "down"))
         }
-        if currentIndexPage == Contains.listImageOfChapter.count - 1 {
+        if currentIndexPage == listImageOfChapter.count - 1 {
             nextPage.setTitleColor(UIColor.black, for: .normal)
         } else {
             nextPage.setTitleColor(UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1), for: .normal)
@@ -81,8 +82,7 @@ class ContentChapterViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        Contains.didLoadListImage = false
-        Contains.listImageOfChapter.removeAll()
+        listImageOfChapter.removeAll()
     }
 }
 

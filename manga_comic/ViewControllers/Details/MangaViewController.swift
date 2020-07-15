@@ -16,7 +16,7 @@ class MangaViewController: UIViewController {
     var imageUrl = ""
     var exitBookmark = false
     
-    public static var currentManga = DetailManga.init() // mỗi lần bấm vào 1 bộ truyện currentManga sẽ thay đổi
+    var currentManga = DetailManga.init() // mỗi lần bấm vào 1 bộ truyện currentManga sẽ thay đổi
     
     let mangapark = MangaPark()
     let mangaparkChache = MangaParkCache()
@@ -26,11 +26,8 @@ class MangaViewController: UIViewController {
         self.title = nameManga
         mangaTable.dataSource = self
         mangaTable.delegate = self
-        if !Contains.didLoadDetailManga {
-            mangapark.getDetailManga(url: urlManga)
-        }
+        mangapark.getDetailManga(url: urlManga, callback: updateDetail(detail:))
         addButtonBookmark()
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: NSNotification.Name("reloadDetail"), object: nil)
     }
     
     func addButtonBookmark() {
@@ -42,7 +39,8 @@ class MangaViewController: UIViewController {
         navigationItem.rightBarButtonItem = button
     }
     
-    @objc func reload() {
+    func updateDetail(detail: DetailManga) {
+        currentManga = detail
         mangaTable.reloadData()
     }
     
@@ -59,7 +57,7 @@ class MangaViewController: UIViewController {
 
 extension MangaViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return MangaViewController.currentManga.volumAndChap.count + 1
+        return currentManga.volumAndChap.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -67,21 +65,21 @@ extension MangaViewController: UITableViewDataSource {
             let cell = mangaTable.dequeueReusableCell(withIdentifier: "MangaDetailTableViewCell") as! MangaDetailTableViewCell
             cell.nameLb.text = nameManga
             cell.imageManga.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "down"))
-            cell.ratingOverview.text = "Rating: " + MangaViewController.currentManga.ratingOverview
-            cell.popularity.text = "Popularity: " + MangaViewController.currentManga.popularity
-            cell.alternative.text = "Alternative: " + MangaViewController.currentManga.alternative
-            cell.authors.text = "Author(s): " + MangaViewController.currentManga.authors
-            cell.artists.text = "Artist(s): "  + MangaViewController.currentManga.artist
-            cell.genre.text = "Genre(s): " + MangaViewController.currentManga.genre
-            cell.type.text = "Type: " + MangaViewController.currentManga.type
-            cell.status.text = "Status: " + MangaViewController.currentManga.status
-            cell.mergeBy.text = "Merged By: " + MangaViewController.currentManga.mergeBy
-            cell.lastest.text = "Latest: " + MangaViewController.currentManga.lastest
-            cell.summary.text = "Summary: " + MangaViewController.currentManga.summary
+            cell.ratingOverview.text = "Rating: " + currentManga.ratingOverview
+            cell.popularity.text = "Popularity: " + currentManga.popularity
+            cell.alternative.text = "Alternative: " + currentManga.alternative
+            cell.authors.text = "Author(s): " + currentManga.authors
+            cell.artists.text = "Artist(s): "  + currentManga.artist
+            cell.genre.text = "Genre(s): " + currentManga.genre
+            cell.type.text = "Type: " + currentManga.type
+            cell.status.text = "Status: " + currentManga.status
+            cell.mergeBy.text = "Merged By: " + currentManga.mergeBy
+            cell.lastest.text = "Latest: " + currentManga.lastest
+            cell.summary.text = "Summary: " + currentManga.summary
             return cell
         } else {
             let cell = mangaTable.dequeueReusableCell(withIdentifier: "ChapterTableViewCell") as! ChapterTableViewCell
-            let chapter = MangaViewController.currentManga.volumAndChap[indexPath.row - 1]
+            let chapter = currentManga.volumAndChap[indexPath.row - 1]
             cell.nameChapter.text = chapter.name
             return cell
         }
@@ -93,7 +91,7 @@ extension MangaViewController: UITableViewDelegate {
         let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
         if indexPath.row > 0 {
             let contentChater = storyboard.instantiateViewController(withIdentifier: "ContentChapterViewController") as? ContentChapterViewController
-            contentChater?.urlContentChap = MangaViewController.currentManga.volumAndChap[indexPath.row - 1].urlVolumAndChap
+            contentChater?.urlContentChap = currentManga.volumAndChap[indexPath.row - 1].urlVolumAndChap
             self.navigationController?.pushViewController(contentChater!, animated: true)
         }
     }

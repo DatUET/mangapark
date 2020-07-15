@@ -16,17 +16,8 @@ class MangaPark {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
         "Cookie": "__cfduid=d6aa29a7052af5e2050820eef37a0a92c1594000986; _ga=GA1.2.641518996.1594000989; _gid=GA1.2.679029208.1594000989; set=theme=1&h=0&img_load=1&img_zoom=1&img_tool=1&twin_m=0&twin_c=0&manga_a_warn=1&history=1&timezone=14; cf_clearance=7f95e221263e69a5f774cde60dfacdf2e27d4d44-1594266809-0-1zedb55dafzff72409cz809c3d3d-150; Hm_lvt_5ee99fa43d3e817978c158dfc8eb72ad=1594173173,1594195360,1594257793,1594283983; _gat_gtag_UA_17788005_10=1; Hm_lpvt_5ee99fa43d3e817978c158dfc8eb72ad=1594284649; __atuvc=290%7C28; __atuvs=5f06afecc8d7ba80036"
     ]
-    public func loadAfterLauchApp(collectionView: UICollectionView!) {
-        getMangaHot(page: 1)
-        getNewManga(page: 1)
-        getMangaLatest(page: 1)
-        NotificationCenter.default.post(name: NSNotification.Name("reload"), object: nil)
-    }
     
-    public func getMangaLatest(page: Int) {
-        if page == 1 {
-            ViewController.arrMangaLastestItem.removeAll()
-        }
+    public func getMangaLatest(page: Int, callback: @escaping ([MangaItem]) -> Void) {
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
         manager.request("https://mangapark.net/latest/\(page)", method: .get, headers: headers)
@@ -34,12 +25,12 @@ class MangaPark {
                 if response.result.isSuccess {
                     let htmlResult = response.result.value!
                     do {
+                        var arrMangaItem = [MangaItem]()
                         let parsed = try SwiftSoup.parse(htmlResult)
-                        
                         for e in try parsed.getElementsByClass("ls1")[0].getElementsByClass("item") {
-                            ViewController.arrMangaLastestItem.append(self.parseHtmlListMangaLastest(element: e))
+                            arrMangaItem.append(self.parseHtmlListMangaLastest(element: e))
                         }
-                        NotificationCenter.default.post(name: NSNotification.Name("reloadHome"), object: nil)
+                        callback(arrMangaItem)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)
@@ -63,10 +54,7 @@ class MangaPark {
         }
     }
     
-    public func getMangaHot(page: Int) {
-        if page == 1 {
-            ViewController.arrMangaHotItem.removeAll()
-        }
+    public func getMangaHot(page: Int, callback: @escaping ([MangaItem]) -> Void) {
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
         manager.request("https://mangapark.net/search?orderby=views&page=\(page)", method: .get, headers: headers)
@@ -74,12 +62,12 @@ class MangaPark {
                 if response.result.isSuccess {
                     let htmlResult = response.result.value!
                     do {
+                        var arrMangaItem = [MangaItem]()
                         let parsed = try SwiftSoup.parse(htmlResult)
-                        
                         for e in try parsed.getElementsByClass("manga-list")[0].getElementsByClass("item") {
-                            ViewController.arrMangaHotItem.append(self.parseListMangaNewOrHot(element: e))
+                            arrMangaItem.append(self.parseListMangaNewOrHot(element: e))
                         }
-                        NotificationCenter.default.post(name: NSNotification.Name("reloadHome"), object: nil)
+                        callback(arrMangaItem)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)
@@ -90,10 +78,7 @@ class MangaPark {
         }
     }
     
-    public func getNewManga(page: Int) {
-        if page == 1 {
-            ViewController.arrMangaNewItem.removeAll()
-        }
+    public func getNewManga(page: Int, callback: @escaping ([MangaItem]) -> Void) {
         let manager = Alamofire.SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = 10
         manager.request("https://mangapark.net/search?orderby=create&page=\(page)", method: .get, headers: headers)
@@ -101,12 +86,12 @@ class MangaPark {
                 if response.result.isSuccess {
                     let htmlResult = response.result.value!
                     do {
+                        var arrMangaItem = [MangaItem]()
                         let parsed = try SwiftSoup.parse(htmlResult)
-                        
                         for e in try parsed.getElementsByClass("manga-list")[0].getElementsByClass("item") {
-                            ViewController.arrMangaNewItem.append(self.parseListMangaNewOrHot(element: e))
+                            arrMangaItem.append(self.parseListMangaNewOrHot(element: e))
                         }
-                        NotificationCenter.default.post(name: NSNotification.Name("reloadHome"), object: nil)
+                        callback(arrMangaItem)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)
@@ -131,16 +116,15 @@ class MangaPark {
         }
     }
     
-    public func getDetailManga(url: String) {
+    public func getDetailManga(url: String, callback: @escaping (DetailManga) -> Void) {
         Alamofire.request(url, method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
                     let htmlResult = response.result.value!
                     do {
                         let parsed = try SwiftSoup.parse(htmlResult)
-                        MangaViewController.currentManga = self.parseDetailManga(document: parsed)
-                        Contains.didLoadDetailManga = true
-                        NotificationCenter.default.post(name: NSNotification.Name("reloadDetail"), object: nil)
+                        let detail = self.parseDetailManga(document: parsed)
+                        callback(detail)
                     } catch {
                         debugPrint(error)
                     }
@@ -178,7 +162,6 @@ class MangaPark {
                 let nameChapter = try blockChapter.getElementsByClass("ml-1 visited ch")[i].text()
                 let urlChapter = try blockChapter.getElementsByClass("d-none d-md-block")[i].select("a")[4].attr("href")
                 arrChapter.append(VolumAndChap.init(name: nameChapter, urlVolumAndChap: Contains.BASE_URL + urlChapter))
-//                debugPrint("\(nameChapter)++++\(urlChapter)")
             }
             
             return DetailManga.init(rating: ratingStar, ratingOverview: ratingOverview, popularity: popularity, alternative: alternative, authors: author, artist: artist, genre: genre, type: type, status: status, mergeBy: mergeBy, lastest: lastest, summary: summary, volumAndChap: arrChapter)
@@ -188,7 +171,7 @@ class MangaPark {
         return DetailManga.init()
     }
     
-    public func getListImageChapter(url: String) {
+    public func getListImageChapter(url: String, callback: @escaping ([String]) -> Void) {
         Alamofire.request(url, method: .get, headers: headers)
             .responseString { response in
                 if response.result.isSuccess {
@@ -201,13 +184,14 @@ class MangaPark {
                         let arrCommic = script[start...end]
                         let data = Data(arrCommic.utf8)
                         let json = try JSON(data: data)
+                        var stringArr = [String]()
                         if let items = json.array {
                             for item in items {
-                                Contains.listImageOfChapter.append(item["u"].stringValue)
+                                stringArr.append(item["u"].stringValue)
+//                                ContentChapterViewController.listImageOfChapter.append(item["u"].stringValue)
                             }
                         }
-                        Contains.didLoadListImage = true
-                        NotificationCenter.default.post(name: NSNotification.Name("reloadContentImage"), object: nil)
+                        callback(stringArr)
                     } catch {
                         debugPrint(error)
                     }
@@ -215,7 +199,7 @@ class MangaPark {
         }
     }
     
-    public func search(orderBy: String, page: Int) {
+    public func search(orderBy: String, page: Int, callback: @escaping ([MangaItem]) -> Void) {
         var genres = ""
         var rating = ""
         var year = ""
@@ -223,10 +207,6 @@ class MangaPark {
             year = ""
         } else {
             year = SearchViewController.yearSearch
-        }
-        if page == 1 {
-            ResultSearchViewController.arrSearchMangaItem.removeAll()
-            NotificationCenter.default.post(name: NSNotification.Name("reloadSearchResult"), object: nil)
         }
         if SearchViewController.rating > 0 {
             rating = "\(SearchViewController.rating)"
@@ -243,11 +223,12 @@ class MangaPark {
                 if response.result.isSuccess {
                     let htmlResult = response.result.value!
                     do {
+                        var arrMangaItem = [MangaItem]()
                         let parsed = try SwiftSoup.parse(htmlResult)
                         for item in try parsed.getElementsByClass("item") {
-                            ResultSearchViewController.arrSearchMangaItem.append(self.parseListMangaNewOrHot(element: item))
+                            arrMangaItem.append(self.parseListMangaNewOrHot(element: item))
                         }
-                        NotificationCenter.default.post(name: NSNotification.Name("reloadSearchResult"), object: nil)
+                        callback(arrMangaItem)
                         Contains.loadMore = false
                     } catch {
                         debugPrint(error)

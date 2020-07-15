@@ -54,20 +54,4 @@ class DetailManga {
         self.summary = summary
         self.volumAndChap = volumAndChap
     }
-    
-    public func removeDetails() {
-        self.rating = ""
-        self.ratingOverview = ""
-        self.popularity = ""
-        self.alternative = ""
-        self.authors = ""
-        self.artist = ""
-        self.genre = ""
-        self.type = ""
-        self.status = ""
-        self.mergeBy = ""
-        self.lastest = ""
-        self.summary = ""
-        self.volumAndChap = []
-    }
 }

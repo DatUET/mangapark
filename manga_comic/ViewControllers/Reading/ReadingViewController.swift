@@ -1,5 +1,5 @@
 //
-//  ReadingViewController.swift
+//  swift
 //  manga_comic
 //
 //  Created by gem on 7/10/20.
@@ -14,8 +14,8 @@ class ReadingViewController: UIViewController {
     
     let mangaparkChache = MangaParkCache()
     var arrReadingItem = [MangaItem]()
-    public static var arrBookmarkManga = [MangaItem]() // danh sách truyện đã đc bookmark
-    public static var arrRecentManga = [MangaItem]() // danh sách truyện vửa đọc
+    var arrBookmarkManga = [MangaItem]() // danh sách truyện đã đc bookmark
+    var arrRecentManga = [MangaItem]() // danh sách truyện vửa đọc
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,24 +28,24 @@ class ReadingViewController: UIViewController {
     
     func setUpCollection() {
         if readSegment.selectedSegmentIndex == 0 {
-            arrReadingItem = ReadingViewController.arrBookmarkManga.reversed()
+            arrReadingItem = arrBookmarkManga.reversed()
         } else {
-            arrReadingItem = ReadingViewController.arrRecentManga.reversed()
+            arrReadingItem = arrRecentManga.reversed()
         }
         readingCollection.reloadData()
     }
     
     @objc func reload() {
-        ReadingViewController.arrBookmarkManga = mangaparkChache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
-        ReadingViewController.arrRecentManga = mangaparkChache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
+        arrBookmarkManga = mangaparkChache.getMangaparkCoreData(nameEntity: Contains.BOOKMARK_CORE_DATA)
+        arrRecentManga = mangaparkChache.getMangaparkCoreData(nameEntity: Contains.RECENT_CORE_DATA)
         setUpCollection()
     }
     
     @objc func changeTab(sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
-            arrReadingItem = ReadingViewController.arrBookmarkManga.reversed()
+            arrReadingItem = arrBookmarkManga.reversed()
         } else {
-            arrReadingItem = ReadingViewController.arrRecentManga.reversed()
+            arrReadingItem = arrRecentManga.reversed()
         }
         readingCollection.reloadData()
     }
@@ -73,8 +73,6 @@ extension ReadingViewController: UICollectionViewDelegate {
         detailManga?.urlManga = arrReadingItem[indexPath.row].url
         detailManga?.nameManga = arrReadingItem[indexPath.row].name
         detailManga?.imageUrl = arrReadingItem[indexPath.row].imageUrl
-        Contains.didLoadDetailManga = false
-        MangaViewController.currentManga.removeDetails()
         self.navigationController?.pushViewController(detailManga!, animated: true)
     }
 }
