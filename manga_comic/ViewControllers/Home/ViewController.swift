@@ -18,6 +18,8 @@ class ViewController: UIViewController {
     var arrMangaHotItem = [MangaItem]() // danh sách truyện thịnh hành
     var arrMangaNewItem = [MangaItem]()
     
+    var loadMore = false
+    
     var mangapark = MangaPark()
     let mangaparkCache = MangaParkCache()
     var currentPageLastest = 1
@@ -46,6 +48,30 @@ class ViewController: UIViewController {
         let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
         let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController
         self.navigationController?.pushViewController(searchViewController!, animated: true)
+    }
+    
+    func addMangaLatest(arr: [MangaItem]) {
+        for item in arr {
+            arrMangaLastestItem.append(item)
+        }
+        loadMore = false
+        reload()
+    }
+    
+    func addMangaNew(arr: [MangaItem]) {
+        for item in arr {
+            arrMangaNewItem.append(item)
+        }
+        loadMore = false
+        reload()
+    }
+    
+    func addMangaHot(arr: [MangaItem]) {
+        for item in arr {
+            arrMangaHotItem.append(item)
+        }
+        loadMore = false
+        reload()
     }
     
     func reload() {
@@ -114,14 +140,14 @@ extension ViewController: UICollectionViewDelegate {
         }
         let contenHeight = scrollView.contentSize.height
         if offsetY > contenHeight - scrollView.frame.height {
-            if !Contains.loadMore {
+            if !loadMore {
                 nextPage()
             }
         }
     }
     
     @objc func nextPage() {
-        Contains.loadMore =  true
+        loadMore =  true
         if mangaSegment.selectedSegmentIndex == 0 {
             currentPageLastest += 1
             mangapark.getMangaLatest(page: currentPageLastest, callback: addMangaLatest(arr:))
@@ -132,27 +158,6 @@ extension ViewController: UICollectionViewDelegate {
             currentPageHot += 1
             mangapark.getMangaHot(page: currentPageHot, callback: addMangaHot(arr:))
         }
-    }
-    
-    func addMangaLatest(arr: [MangaItem]) {
-        for item in arr {
-            arrMangaLastestItem.append(item)
-        }
-        reload()
-    }
-    
-    func addMangaNew(arr: [MangaItem]) {
-        for item in arr {
-            arrMangaNewItem.append(item)
-        }
-        reload()
-    }
-    
-    func addMangaHot(arr: [MangaItem]) {
-        for item in arr {
-            arrMangaHotItem.append(item)
-        }
-        reload()
     }
 }
 

@@ -14,7 +14,7 @@ import SwiftyJSON
 class MangaPark {
     let headers = [
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
-        "Cookie": "__cfduid=d6aa29a7052af5e2050820eef37a0a92c1594000986; _ga=GA1.2.641518996.1594000989; _gid=GA1.2.679029208.1594000989; set=theme=1&h=0&img_load=1&img_zoom=1&img_tool=1&twin_m=0&twin_c=0&manga_a_warn=1&history=1&timezone=14; cf_clearance=7f95e221263e69a5f774cde60dfacdf2e27d4d44-1594266809-0-1zedb55dafzff72409cz809c3d3d-150; Hm_lvt_5ee99fa43d3e817978c158dfc8eb72ad=1594173173,1594195360,1594257793,1594283983; _gat_gtag_UA_17788005_10=1; Hm_lpvt_5ee99fa43d3e817978c158dfc8eb72ad=1594284649; __atuvc=290%7C28; __atuvs=5f06afecc8d7ba80036"
+        "Cookie": "__cfduid=d6aa29a7052af5e2050820eef37a0a92c1594000986; _ga=GA1.2.641518996.1594000989; _gid=GA1.2.1251178024.1594603015; cf_clearance=2a19f7ff467858c2f5265b00f2c8a6b1ed597e1d-1594807603-0-1zedb55dafzff72409cz809c3d3d-150; set=theme=1&h=0&img_load=1&img_zoom=1&img_tool=1&twin_m=0&twin_c=0&manga_a_warn=1&history=1&timezone=14; Hm_lvt_5ee99fa43d3e817978c158dfc8eb72ad=1594703881,1594706188,1594776906,1594862746; _gat_gtag_UA_17788005_10=1; Hm_lpvt_5ee99fa43d3e817978c158dfc8eb72ad=1594872271; __atuvc=333%7C28%2C99%7C29; __atuvs=5f0fd1a90ac3f19d001"
     ]
     
     public func getMangaLatest(page: Int, callback: @escaping ([MangaItem]) -> Void) {
@@ -31,7 +31,6 @@ class MangaPark {
                             arrMangaItem.append(self.parseHtmlListMangaLastest(element: e))
                         }
                         callback(arrMangaItem)
-                        Contains.loadMore = false
                     } catch {
                         debugPrint(error)
                     }
@@ -68,7 +67,6 @@ class MangaPark {
                             arrMangaItem.append(self.parseListMangaNewOrHot(element: e))
                         }
                         callback(arrMangaItem)
-                        Contains.loadMore = false
                     } catch {
                         debugPrint(error)
                     }
@@ -92,7 +90,6 @@ class MangaPark {
                             arrMangaItem.append(self.parseListMangaNewOrHot(element: e))
                         }
                         callback(arrMangaItem)
-                        Contains.loadMore = false
                     } catch {
                         debugPrint(error)
                     }
@@ -229,7 +226,6 @@ class MangaPark {
                             arrMangaItem.append(self.parseListMangaNewOrHot(element: item))
                         }
                         callback(arrMangaItem)
-                        Contains.loadMore = false
                     } catch {
                         debugPrint(error)
                     }

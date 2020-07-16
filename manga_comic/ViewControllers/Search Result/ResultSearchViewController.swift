@@ -25,6 +25,8 @@ class ResultSearchViewController: UIViewController {
     var mode = 4
     var arrSortButton = [UIButton]()
     
+    var loadMore = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         resultSearchCollection.dataSource = self
@@ -88,6 +90,7 @@ class ResultSearchViewController: UIViewController {
         for item in arr {
             arrSearchMangaItem.append(item)
         }
+        loadMore = false
         resultSearchCollection.reloadData()
     }
     
@@ -126,7 +129,7 @@ extension ResultSearchViewController: UICollectionViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contenHeight = scrollView.contentSize.height
         if offsetY > contenHeight - scrollView.frame.height && offsetY > 0 {
-            if !Contains.loadMore {
+            if !loadMore {
                 page += 1
                 nextPage()
             }
@@ -134,7 +137,7 @@ extension ResultSearchViewController: UICollectionViewDelegate {
     }
     
     @objc func nextPage() {
-        Contains.loadMore =  true
+        loadMore =  true
         mangapark.search(orderBy: orderBy, page: page, callback: updateSearchResult(arr:))
     }
 }
