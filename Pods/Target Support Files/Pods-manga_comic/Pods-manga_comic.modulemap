@@ -1,6 +1,0 @@
-framework module Pods_manga_comic {
-  umbrella header "Pods-manga_comic-umbrella.h"
-
-  export *
-  module * { export * }
-}
